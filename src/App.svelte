@@ -111,12 +111,12 @@
 
   const mutateUpdatePost = mutation(updatePostStore);
 
-  function updatePost(
+  const updatePost = async (
     id: number,
     newTitle: string,
     newBody: string,
     newAuthor: string
-  ) {
+  ) => {
     console.log(id);
 
     const post = query(singlePost);
@@ -128,7 +128,7 @@
       body: newBody,
       author: newAuthor,
     });
-  }
+  };
 
   const deletePost = operationStore(deletePostMutation, { id });
 
@@ -142,7 +142,10 @@
 </script>
 
 <main>
-  <h1>Hello {name}!</h1>
+  <h1>Post App</h1>
+
+  <h2>Posts</h2>
+  <input bind:value={id} type="number" placeholder="Enter the post ID" />
 
   {#if $allPosts.fetching}
     <p>loading...</p>
@@ -161,7 +164,8 @@
     </ul>
   {/if}
 
-  {id}
+  <h2>Post</h2>
+
   {#if $singlePost.fetching}
     <p>loading...</p>
   {:else if $singlePost.error}
@@ -169,28 +173,23 @@
   {:else}
     {$singlePost.data.post.id}
     {$singlePost.data.post.title}
-    {$singlePost.data.post.description}
+    {$singlePost.data.post.body}
     {$singlePost.data.post.author}
     {$singlePost.data.post.createdAt}
     {$singlePost.data.post.updatedAt}
   {/if}
 
-  <div>
-    <input bind:value={id} type="number" placeholder="Enter the post ID" />
-    <button type="submit" on:click={() => updateId()}> Search Post </button>
-  </div>
-
-  <p>{title}</p>
+  <h2>Form</h2>
 
   <div>
     <input bind:value={title} type="text" placeholder="Enter Post Title" />
     <input bind:value={body} type="text" placeholder="Enter Post Body" />
     <input bind:value={author} type="text" placeholder="Enter Post Author" />
+  </div>
+  <div>
+    <button type="submit" on:click={() => updateId()}> Search Post </button>
     <button type="submit" on:click={() => createPost(title, body, author)}>
       Create Post
-    </button>
-    <button type="submit" on:click={() => updatePost(id, title, body, author)}>
-      Update Post
     </button>
   </div>
 </main>
@@ -208,6 +207,12 @@
     text-transform: uppercase;
     font-size: 4em;
     font-weight: 100;
+  }
+
+  h2 {
+    color: #ff3e00;
+    font-size: 3em;
+    font-weight: 80;
   }
 
   @media (min-width: 640px) {
